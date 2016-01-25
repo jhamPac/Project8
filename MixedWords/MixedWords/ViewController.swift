@@ -26,14 +26,30 @@ class ViewController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        // grab all the buttons and put them in a collection and add a target
         
-        for subview in view.subviews where subview.tag == 1001
+        // FIXME: - Better solution to loop through UISTACKVIEWS
+        for subview in view.subviews
         {
-            let btn = subview as! UIButton
-            letterButtons.append(btn)
-            btn.addTarget(self, action: "letterTapped:", forControlEvents: .TouchUpInside)
+            if let topStack = subview as? UIStackView
+            {
+                for subStacks in topStack.subviews
+                {
+                    if let buttonStacks = subStacks as? UIStackView
+                    {
+                        for button in buttonStacks.subviews
+                        {
+                            if let btn = button as? UIButton
+                            {
+                                btn.addTarget(self, action: "letterTapped:", forControlEvents: .TouchUpInside)
+                                letterButtons.append(btn)
+                            }
+                        }
+                    }
+                }
+            }
         }
+        
+        loadLevel()
         
     }
     
@@ -43,6 +59,11 @@ class ViewController: UIViewController
     }
     
     @IBAction func clearTapped(sender: UIButton)
+    {
+        
+    }
+    
+    func letterTapped(button: UIButton)
     {
         
     }
@@ -76,6 +97,7 @@ class ViewController: UIViewController
                     solutionString += "\(solutionWord.characters.count) letters\n"
                     solutions.append(solutionWord)
                     
+                    // append at the end of letterBits
                     let bits = answer.componentsSeparatedByString("|")
                     letterBits += bits
                 }
@@ -83,7 +105,19 @@ class ViewController: UIViewController
         }
         
         // configure buttons
+        cluesLabel.text = clueString.stringByTrimmingCharactersInSet(.whitespaceAndNewlineCharacterSet())
+        answersLabel.text = solutionString.stringByTrimmingCharactersInSet(.whitespaceAndNewlineCharacterSet())
+        letterBits = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(letterBits) as! [String]
+        letterButtons = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(letterButtons) as! [UIButton]
         
+        if letterBits.count == letterButtons.count
+        {
+            // remember we randomized these arrays using GKRandomSource
+            for i in 0..<letterBits.count
+            {
+                letterButtons[i].setTitle(letterBits[i], forState: .Normal)
+            }
+        }
     }
 }
 
