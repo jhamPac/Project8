@@ -322,7 +322,7 @@
                     <connections>
                         <outlet property="answersLabel" destination="Fvl-Fd-TjW" id="9k4-Cs-mNC"/>
                         <outlet property="cluesLabel" destination="5yw-0f-CZr" id="WSZ-te-S0q"/>
-                        <outlet property="currentAnswer" destination="Fvl-Fd-TjW" id="4Wy-tM-E2D"/>
+                        <outlet property="currentAnswer" destination="2LJ-bX-OiR" id="99s-cf-1ut"/>
                         <outlet property="scoreLabel" destination="cOR-7v-Os2" id="HcX-F4-qG0"/>
                     </connections>
                 </viewController>

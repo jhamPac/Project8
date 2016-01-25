@@ -14,7 +14,8 @@ class ViewController: UIViewController
     @IBOutlet weak var cluesLabel: UILabel!
     @IBOutlet weak var answersLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
-    @IBOutlet weak var currentAnswer: UILabel!
+    @IBOutlet weak var currentAnswer: UITextField!
+    
     
     var letterButtons = [UIButton]()
     var activeButtons = [UIButton]()
