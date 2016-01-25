@@ -28,21 +28,18 @@ class ViewController: UIViewController
         super.viewDidLoad()
         
         // FIXME: - Better solution to loop through UISTACKVIEWS
-        for subview in view.subviews
+        for subview in view.subviews where subview.tag == 1001
         {
-            if let topStack = subview as? UIStackView
+            for subStacks in subview.subviews
             {
-                for subStacks in topStack.subviews
+                if let buttonStacks = subStacks as? UIStackView
                 {
-                    if let buttonStacks = subStacks as? UIStackView
+                    for button in buttonStacks.subviews
                     {
-                        for button in buttonStacks.subviews
+                        if let btn = button as? UIButton
                         {
-                            if let btn = button as? UIButton
-                            {
-                                btn.addTarget(self, action: "letterTapped:", forControlEvents: .TouchUpInside)
-                                letterButtons.append(btn)
-                            }
+                            btn.addTarget(self, action: "letterTapped:", forControlEvents: .TouchUpInside)
+                            letterButtons.append(btn)
                         }
                     }
                 }
@@ -50,22 +47,60 @@ class ViewController: UIViewController
         }
         
         loadLevel()
-        
     }
     
     @IBAction func submitTapped(sender: UIButton)
     {
-        
+        if let solutionPosition = solutions.indexOf(currentAnswer.text!)
+        {
+            activeButtons.removeAll()
+            
+            var splitClues = answersLabel.text!.componentsSeparatedByString("\n")
+            splitClues[solutionPosition] = currentAnswer.text!
+            answersLabel.text = splitClues.joinWithSeparator("\n")
+            
+            currentAnswer.text = ""
+            ++score
+            
+            if score % 7 == 0
+            {
+                let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .Alert)
+                ac.addAction(UIAlertAction(title: "Let's go!", style: .Default, handler: levelUp))
+                presentViewController(ac, animated: true, completion: nil)
+            }
+        }
     }
     
     @IBAction func clearTapped(sender: UIButton)
     {
+        currentAnswer.text = ""
         
+        for btn in activeButtons
+        {
+            btn.hidden = false
+        }
+        
+        activeButtons.removeAll()
     }
     
     func letterTapped(button: UIButton)
     {
+        currentAnswer.text = currentAnswer.text! + button.titleLabel!.text!
+        activeButtons.append(button)
+        button.hidden = true
+    }
+    
+    func levelUp(action: UIAlertAction!)
+    {
+        ++level
+        solutions.removeAll(keepCapacity: true)
         
+        loadLevel()
+        
+        for btn in letterButtons
+        {
+            btn.hidden = false
+        }
     }
     
     func loadLevel()
