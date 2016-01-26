@@ -21,7 +21,11 @@ class ViewController: UIViewController
     var activeButtons = [UIButton]()
     var solutions = [String]()
     
-    var score = 0
+    var score: Int = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
     var level = 1
     
     override func viewDidLoad()
